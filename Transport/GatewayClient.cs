@@ -33,12 +33,14 @@ namespace DnsNoteWriter.Transport
                 try
                 {
                     client.BaseAddress = new Uri(configuration["NoteServerSettings:BaseUrl"]);
-                    var content = request.Data is null ? null : JsonContent.Create(request.Data);
+
                     try
                     {
-                        var result = await client.PostAsync(request.ApiUrl, content);
-                        var person = await result.Content.ReadFromJsonAsync(resultType);
-                        return response.InitializeResponse(result.StatusCode, person) as TResponse;
+                        var result = await client.GetAsync(request.ApiUrl);
+
+                        var resultData = await result.Content.ReadFromJsonAsync(resultType);
+
+                        return response.InitializeResponse(result.StatusCode, resultData) as TResponse;
                     }
                     catch (HttpRequestException ex) when (ex.StatusCode != HttpStatusCode.OK)
                     {

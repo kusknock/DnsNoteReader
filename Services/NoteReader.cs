@@ -54,7 +54,11 @@ namespace DnsNoteWriter.Services
                 }
 
                 foreach (var item in resultData)
+                {
                     logger.LogInformation("Заметка c номером {0} и текстом {1} прочитана", item.Id, item.Text);
+
+                    Thread.Sleep(new Random(Guid.NewGuid().GetHashCode()).Next(1, 3) * 1000);
+                }
             }
             catch (Exception ex)
             {
